@@ -1,0 +1,16 @@
+name: "Runners"
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./runner
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependancies
+        run: npm install
+      - name: Run tests
+        run: npm test
