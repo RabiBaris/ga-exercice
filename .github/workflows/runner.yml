@@ -3,14 +3,20 @@ name: "Runners"
 on: workflow_dispatch
 
 jobs:
-  build:
+  create-runner:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./runner
+    strategy:
+      matrix:
+        image: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v2
-      - name: Install dependancies
-        run: npm install
-      - name: Run tests
-        run: npm test
+      - name: Create runner
+        uses:
+          docker://ghcr.io/summerwind/actions-runner-controller:latest
+        with:
+          args: |
+            create
+            --token ${{ secrets.GITHUB_TOKEN }}
+            --name ${{ matrix.image }}
+            --image ${{ matrix.image }}
+            --labels ${{ matrix.image }}
+            --replace
